@@ -24,7 +24,7 @@ try {
     shell: "/bin/bash"
   });
 
-  const axeRunner = execSync("axe http://localhost:8080/index.html --exit --load-delay=3000 | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' > axe.log");
+  const axeRunner = execSync("npx axe http://localhost:8080/index.html --exit --load-delay=3000 | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' > axe.log");
 
   core.setOutput("axe-results-location", "axe.log");
   kill(server.pid);
