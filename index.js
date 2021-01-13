@@ -5,24 +5,26 @@ const kill  = require('tree-kill');
 const { exec, spawn, execSync } = require("child_process");
 
 try {
-  const configFile = core.getInput('config-file-location') ? core.getInput('config-file-location') : "ui5.yaml";
+  const configFile = core.getInput('build-config-file') ? core.getInput('build-config-file') : "ci.yaml";
+  const configFileServe = core.getInput('serve-config-file') ? core.getInput('serve-config-file') : "serve.yaml";
   const projectPath = process.env.GITHUB_WORKSPACE;
-  console.log(`Config file: ${configFile}`);
+  core.info(`Build config file: ${configFile}`);
+  core.info(`Serve config file: ${configFileServe}`);
 
   const build = execSync(`cd ${projectPath} && npm install @sap/ui5-builder-webide-extension@1.0.11 && npx ui5 build dev --all --config=${configFile}`);
 
-  console.log(`stdout: ${build}`);
+  core.info(`stdout: ${build}`);
 
-  const server = spawn(`cd ${projectPath} && npx ui5 serve`, {
+  const server = spawn(`cd ${projectPath} && npx ui5 serve --config=${configFile}`, {
     shell: "/bin/bash"
   });
 
-  console.log("Spawned server");
+  core.info("Spawned server");
 
-  const axeRunner = execSync("npx axe http://localhost:8080/index.html --exit --load-delay=3000 | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' > axe.log");
+  const axeRunner = execSync("npx axe http://localhost:8080/index.html --load-delay=3000");
 
-  console.log("Axe run complete and stored in axe.log");
-  core.setOutput("axe-results-location", "axe.log");
+  core.info(`stdout: ${axeRunner}`);
+
   kill(server.pid);
 } catch (error) {
   core.setFailed(error.message);

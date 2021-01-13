@@ -12,24 +12,26 @@ const kill  = __nccwpck_require__(9335);
 const { exec, spawn, execSync } = __nccwpck_require__(3129);
 
 try {
-  const configFile = core.getInput('config-file-location') ? core.getInput('config-file-location') : "ui5.yaml";
+  const configFile = core.getInput('build-config-file') ? core.getInput('build-config-file') : "ci.yaml";
+  const configFileServe = core.getInput('serve-config-file') ? core.getInput('serve-config-file') : "serve.yaml";
   const projectPath = process.env.GITHUB_WORKSPACE;
-  console.log(`Config file: ${configFile}`);
+  core.info(`Build config file: ${configFile}`);
+  core.info(`Serve config file: ${configFileServe}`);
 
   const build = execSync(`cd ${projectPath} && npm install @sap/ui5-builder-webide-extension@1.0.11 && npx ui5 build dev --all --config=${configFile}`);
 
-  console.log(`stdout: ${build}`);
+  core.info(`stdout: ${build}`);
 
-  const server = spawn(`cd ${projectPath} && npx ui5 serve`, {
+  const server = spawn(`cd ${projectPath} && npx ui5 serve --config=${configFile}`, {
     shell: "/bin/bash"
   });
 
-  console.log("Spawned server");
+  core.info("Spawned server");
 
-  const axeRunner = execSync("npx axe http://localhost:8080/index.html --exit --load-delay=3000 | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' > axe.log");
+  const axeRunner = execSync("npx axe http://localhost:8080/index.html --load-delay=3000 > axe.log");
 
-  console.log("Axe run complete and stored in axe.log");
-  core.setOutput("axe-results-location", "axe.log");
+  core.info(`stdout: ${axeRunner}`);
+
   kill(server.pid);
 } catch (error) {
   core.setFailed(error.message);
@@ -6182,7 +6184,7 @@ function ownProp (obj, field) {
 
 var path = __nccwpck_require__(5622)
 var minimatch = __nccwpck_require__(3973)
-var isAbsolute = __nccwpck_require__(1219)
+var isAbsolute = __nccwpck_require__(8714)
 var Minimatch = minimatch.Minimatch
 
 function alphasorti (a, b) {
@@ -6463,7 +6465,7 @@ var inherits = __nccwpck_require__(4124)
 var EE = __nccwpck_require__(8614).EventEmitter
 var path = __nccwpck_require__(5622)
 var assert = __nccwpck_require__(2357)
-var isAbsolute = __nccwpck_require__(1219)
+var isAbsolute = __nccwpck_require__(8714)
 var globSync = __nccwpck_require__(9010)
 var common = __nccwpck_require__(7625)
 var alphasort = common.alphasort
@@ -7221,7 +7223,7 @@ var Glob = __nccwpck_require__(1957).Glob
 var util = __nccwpck_require__(1669)
 var path = __nccwpck_require__(5622)
 var assert = __nccwpck_require__(2357)
-var isAbsolute = __nccwpck_require__(1219)
+var isAbsolute = __nccwpck_require__(8714)
 var common = __nccwpck_require__(7625)
 var alphasort = common.alphasort
 var alphasorti = common.alphasorti
@@ -10493,7 +10495,7 @@ function onceStrict (fn) {
 
 /***/ }),
 
-/***/ 1219:
+/***/ 8714:
 /***/ ((module) => {
 
 "use strict";
@@ -10521,62 +10523,7 @@ module.exports.win32 = win32;
 
 /***/ }),
 
-/***/ 8065:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-const {promisify} = __nccwpck_require__(1669);
-const tmp = __nccwpck_require__(7390);
-
-// file
-module.exports.fileSync = tmp.fileSync;
-const fileWithOptions = promisify((options, cb) =>
-  tmp.file(options, (err, path, fd, cleanup) =>
-    err ? cb(err) : cb(undefined, { path, fd, cleanup: promisify(cleanup) })
-  )
-);
-module.exports.file = async (options) => fileWithOptions(options);
-
-module.exports.withFile = async function withFile(fn, options) {
-  const { path, fd, cleanup } = await module.exports.file(options);
-  try {
-    return await fn({ path, fd });
-  } finally {
-    await cleanup();
-  }
-};
-
-
-// directory
-module.exports.dirSync = tmp.dirSync;
-const dirWithOptions = promisify((options, cb) =>
-  tmp.dir(options, (err, path, cleanup) =>
-    err ? cb(err) : cb(undefined, { path, cleanup: promisify(cleanup) })
-  )
-);
-module.exports.dir = async (options) => dirWithOptions(options);
-
-module.exports.withDir = async function withDir(fn, options) {
-  const { path, cleanup } = await module.exports.dir(options);
-  try {
-    return await fn({ path });
-  } finally {
-    await cleanup();
-  }
-};
-
-
-// name generation
-module.exports.tmpNameSync = tmp.tmpNameSync;
-module.exports.tmpName = promisify(tmp.tmpName);
-
-module.exports.tmpdir = tmp.tmpdir;
-
-module.exports.setGracefulCleanup = tmp.setGracefulCleanup;
-
-
-/***/ }),
-
-/***/ 8714:
+/***/ 4959:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 module.exports = rimraf
@@ -10955,7 +10902,62 @@ function rmkidsSync (p, options) {
 
 /***/ }),
 
-/***/ 7390:
+/***/ 8065:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const {promisify} = __nccwpck_require__(1669);
+const tmp = __nccwpck_require__(8517);
+
+// file
+module.exports.fileSync = tmp.fileSync;
+const fileWithOptions = promisify((options, cb) =>
+  tmp.file(options, (err, path, fd, cleanup) =>
+    err ? cb(err) : cb(undefined, { path, fd, cleanup: promisify(cleanup) })
+  )
+);
+module.exports.file = async (options) => fileWithOptions(options);
+
+module.exports.withFile = async function withFile(fn, options) {
+  const { path, fd, cleanup } = await module.exports.file(options);
+  try {
+    return await fn({ path, fd });
+  } finally {
+    await cleanup();
+  }
+};
+
+
+// directory
+module.exports.dirSync = tmp.dirSync;
+const dirWithOptions = promisify((options, cb) =>
+  tmp.dir(options, (err, path, cleanup) =>
+    err ? cb(err) : cb(undefined, { path, cleanup: promisify(cleanup) })
+  )
+);
+module.exports.dir = async (options) => dirWithOptions(options);
+
+module.exports.withDir = async function withDir(fn, options) {
+  const { path, cleanup } = await module.exports.dir(options);
+  try {
+    return await fn({ path });
+  } finally {
+    await cleanup();
+  }
+};
+
+
+// name generation
+module.exports.tmpNameSync = tmp.tmpNameSync;
+module.exports.tmpName = promisify(tmp.tmpName);
+
+module.exports.tmpdir = tmp.tmpdir;
+
+module.exports.setGracefulCleanup = tmp.setGracefulCleanup;
+
+
+/***/ }),
+
+/***/ 8517:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /*!
@@ -10976,7 +10978,7 @@ const crypto = __nccwpck_require__(6417);
 const _c = fs.constants && os.constants ?
   { fs: fs.constants, os: os.constants } :
   process.binding('constants');
-const rimraf = __nccwpck_require__(8714);
+const rimraf = __nccwpck_require__(4959);
 
 /*
  * The working inner variables.

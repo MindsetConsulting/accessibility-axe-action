@@ -2,8 +2,9 @@
   "name": "accessibility-axe-action",
   "version": "1.0.0",
   "description": "Github action for running axe accessibility tests",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
+    "pretest": "npm run build",
     "test": "export GITHUB_WORKSPACE=node_modules/msp_transPost && node dist/index.js",
     "build": "ncc build index.js --license licenses.txt"
   },
