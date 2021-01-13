@@ -1,0 +1,17 @@
+name: 'Hello World'
+description: 'Greet someone and record the time'
+inputs:
+  project-path:
+    description: 'Path of the project to test'
+    required: false
+    default: './'
+  config-file-location:  # id of input
+    description: 'ID of the UI5 repository to test'
+    required: false
+    default: 'ui5.yaml'
+outputs:
+  axe-results-location: # id of output
+    description: 'File with results of the axe CLI run'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
