@@ -12,7 +12,7 @@ const kill  = __nccwpck_require__(9335);
 const { exec, spawn, execSync } = __nccwpck_require__(3129);
 
 try {
-  const configFile = core.getInput('config-file-location') ? core.getInput('config-file-location') : "ci.yaml";
+  const configFile = core.getInput('config-file-location') ? core.getInput('config-file-location') : "ui5.yaml";
   const projectPath = process.env.GITHUB_WORKSPACE;
   console.log(`Config file: ${configFile}`);
 

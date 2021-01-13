@@ -5,7 +5,7 @@ const kill  = require('tree-kill');
 const { exec, spawn, execSync } = require("child_process");
 
 try {
-  const configFile = core.getInput('config-file-location') ? core.getInput('config-file-location') : "ci.yaml";
+  const configFile = core.getInput('config-file-location') ? core.getInput('config-file-location') : "ui5.yaml";
   const projectPath = process.env.GITHUB_WORKSPACE;
   console.log(`Config file: ${configFile}`);
 
