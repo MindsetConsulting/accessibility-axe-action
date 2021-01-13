@@ -24,21 +24,6 @@ try {
   console.log("Axe run complete and stored in axe.log");
   core.setOutput("axe-results-location", "axe.log");
   kill(server.pid);
-
-  if(process.env.ACTIONS_RUNTIME_TOKEN) {
-    const artifactClient = artifact.create()
-    const artifactName = 'axe-output';
-    const files = [
-        'axe-output.txt'
-    ]
-
-    const rootDirectory = '.' // Also possible to use __dirname
-    const options = {
-        continueOnError: false
-    }
-
-    artifactClient.uploadArtifact(artifactName, files, rootDirectory, options)
-  }
 } catch (error) {
   core.setFailed(error.message);
 }
