@@ -16,11 +16,11 @@ try {
   const projectPath = process.env.GITHUB_WORKSPACE;
   console.log(`Config file: ${configFile}`);
 
-  const build = execSync(`cd ${projectPath} && npm install @sap/ui5-builder-webide-extension@1.0.11 && ui5 build dev --all --config=${configFile}`);
+  const build = execSync(`cd ${projectPath} && npm install @sap/ui5-builder-webide-extension@1.0.11 && npx ui5 build dev --all --config=${configFile}`);
 
   console.log(`stdout: ${build}`);
 
-  const server = spawn(`cd ${projectPath} && ui5 serve`, {
+  const server = spawn(`cd ${projectPath} && npx ui5 serve`, {
     shell: "/bin/bash"
   });
 
