@@ -17,25 +17,28 @@ try {
     shell: "/bin/bash"
   });
 
+  console.log("Spawned server");
+
   const axeRunner = execSync("npx axe http://localhost:8080/index.html --exit --load-delay=3000 | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' > axe.log");
 
+  console.log("Axe run complete and stored in axe.log");
   core.setOutput("axe-results-location", "axe.log");
   kill(server.pid);
 
-  // if(process.env.ACTIONS_RUNTIME_TOKEN) {
-  //   const artifactClient = artifact.create()
-  //   const artifactName = 'axe-output';
-  //   const files = [
-  //       'axe-output.txt'
-  //   ]
+  if(process.env.ACTIONS_RUNTIME_TOKEN) {
+    const artifactClient = artifact.create()
+    const artifactName = 'axe-output';
+    const files = [
+        'axe-output.txt'
+    ]
 
-  //   const rootDirectory = '.' // Also possible to use __dirname
-  //   const options = {
-  //       continueOnError: false
-  //   }
+    const rootDirectory = '.' // Also possible to use __dirname
+    const options = {
+        continueOnError: false
+    }
 
-  //   const uploadResponse = await artifactClient.uploadArtifact(artifactName, files, rootDirectory, options)
-  // }
+    artifactClient.uploadArtifact(artifactName, files, rootDirectory, options)
+  }
 } catch (error) {
   core.setFailed(error.message);
 }
