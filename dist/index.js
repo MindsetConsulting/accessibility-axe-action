@@ -12,15 +12,15 @@ const kill  = __nccwpck_require__(9335);
 const { exec, spawn, execSync } = __nccwpck_require__(3129);
 
 try {
-  const configFile = core.getInput('build-config-file') ? core.getInput('build-config-file') : "ci.yaml";
-  const configFileServe = core.getInput('serve-config-file') ? core.getInput('serve-config-file') : "serve.yaml";
+  const configFile = core.getInput('build-config-file') ? core.getInput('build-config-file') : "ui5.yaml";
+  const configFileServe = core.getInput('serve-config-file') ? core.getInput('serve-config-file') : "ui5.yaml";
   const projectPath = process.env.GITHUB_WORKSPACE;
   core.info(`Build config file: ${configFile}`);
   core.info(`Serve config file: ${configFileServe}`);
 
   const build = execSync(`cd ${projectPath} && npm install @sap/ui5-builder-webide-extension@1.0.11 && npx ui5 build dev --all --config=${configFile}`);
 
-  core.info(`stdout: ${build}`);
+  core.info(build);
 
   const server = spawn(`cd ${projectPath} && npx ui5 serve --config=${configFile}`, {
     shell: "/bin/bash"
@@ -28,9 +28,9 @@ try {
 
   core.info("Spawned server");
 
-  const axeRunner = execSync("npx axe http://localhost:8080/index.html --load-delay=3000 > axe.log");
+  const axeRunner = execSync("npx axe http://localhost:8080/index.html --load-delay=3000");
 
-  core.info(`stdout: ${axeRunner}`);
+  core.info(axeRunner);
 
   kill(server.pid);
 } catch (error) {

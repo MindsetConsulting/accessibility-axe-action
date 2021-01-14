@@ -5,8 +5,8 @@ const kill  = require('tree-kill');
 const { exec, spawn, execSync } = require("child_process");
 
 try {
-  const configFile = core.getInput('build-config-file') ? core.getInput('build-config-file') : "ci.yaml";
-  const configFileServe = core.getInput('serve-config-file') ? core.getInput('serve-config-file') : "serve.yaml";
+  const configFile = core.getInput('build-config-file') ? core.getInput('build-config-file') : "ui5.yaml";
+  const configFileServe = core.getInput('serve-config-file') ? core.getInput('serve-config-file') : "ui5.yaml";
   const projectPath = process.env.GITHUB_WORKSPACE;
   core.info(`Build config file: ${configFile}`);
   core.info(`Serve config file: ${configFileServe}`);
@@ -21,7 +21,7 @@ try {
 
   core.info("Spawned server");
 
-  const axeRunner = execSync("npx axe http://localhost:8080/index.html --stdout --load-delay=3000");
+  const axeRunner = execSync("npx axe http://localhost:8080/index.html --load-delay=3000");
 
   core.info(axeRunner);
 
