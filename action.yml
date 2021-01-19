@@ -8,7 +8,11 @@ inputs:
   load-delay:
     description: 'Milliseconds of delay to use'
     required: false
-    default: '0' 
+    default: '0'
+  fail-on-violation:
+    description: 'Set failure code after violation'
+    required: false
+    default: 'false'
 runs:
   using: 'node12'
   main: 'dist/index.js'

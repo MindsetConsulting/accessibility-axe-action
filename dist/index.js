@@ -9,6 +9,8 @@ const core = __nccwpck_require__(186);
 const fs = __nccwpck_require__(747);
 const { execSync } = __nccwpck_require__(129);
 
+const failOnViolation = core.getInput('fail-on-violation') ? core.getInput('fail-on-violation') : 'false';
+
 try {
   const location = core.getInput('location') ? core.getInput('location') : "http://localhost:8080/index.html";
   const loadDelay = core.getInput('load-delay') ? core.getInput('load-delay') : '0';
@@ -31,7 +33,9 @@ try {
         })
         core.endGroup();
       });
-      core.setFailed("a11y checks failed.");
+
+      core.info(failOnViolation);
+      if(failOnViolation === 'true') core.setFailed("a11y checks failed.");
     } catch (error) {
       core.setFailed("Failed to read log file axe.json.log.");
     }
