@@ -1,14 +1,10 @@
 name: 'Hello World'
 description: 'Greet someone and record the time'
 inputs:
-  build-config-file:  # id of input
-    description: 'Location of the config file to use for build'
+  location:  # id of input
+    description: 'URL of the page to test'
     required: false
-    default: 'ui5.yaml'
-  serve-config-file:  # id of input
-    description: 'Location of the config file to use for serve'
-    required: false
-    default: 'ui5.yaml'
+    default: 'http://localhost:8080/index.html'
 outputs:
   axe-results-location: # id of output
     description: 'File with results of the axe CLI run'
