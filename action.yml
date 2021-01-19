@@ -1,10 +1,14 @@
 name: 'Hello World'
 description: 'Greet someone and record the time'
 inputs:
-  location:  # id of input
+  location:
     description: 'URL of the page to test'
     required: false
     default: 'http://localhost:8080/index.html'
+  load-delay:
+    description: 'Milliseconds of delay to use'
+    required: false
+    default: '0' 
 runs:
   using: 'node12'
   main: 'dist/index.js'
