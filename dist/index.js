@@ -11,7 +11,7 @@ const { execSync } = __nccwpck_require__(129);
 
 try {
   const location = core.getInput('location') ? core.getInput('location') : "http://localhost:8080/index.html";
-  const loadDelay = core.getInput('load-delay') ? core.getInput('load-delay') : '5000';
+  const loadDelay = core.getInput('load-delay') ? core.getInput('load-delay') : '0';
   core.info(`Running on: ${location}`);
 
   const axeRunner = execSync(`npx axe ${location} --load-delay=${loadDelay} --save=axe.json.log --exit`);
@@ -30,7 +30,8 @@ try {
           core.info(node.html);
         })
         core.endGroup();
-      })
+      });
+      core.setFailed("a11y checks failed.");
     } catch (error) {
       core.setFailed("Failed to read log file axe.json.log.");
     }

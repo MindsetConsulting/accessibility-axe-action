@@ -23,7 +23,8 @@ try {
           core.info(node.html);
         })
         core.endGroup();
-      })
+      });
+      core.setFailed("a11y checks failed.");
     } catch (error) {
       core.setFailed("Failed to read log file axe.json.log.");
     }
